@@ -1121,6 +1121,19 @@ function position() {
   try { ms.setPositionState({ duration: audio.duration, playbackRate: audio.playbackRate, position: Math.min(audio.currentTime, audio.duration) }) } catch {}
 }
 
+// soundcloud sometimes deletes artwork, discord shows a dead link as a ?
+const coverChecks = new Map()
+function liveCover(url) {
+  if (!url) return null
+  if (!coverChecks.has(url)) {
+    coverChecks.set(url, true)
+    const img = new Image()
+    img.onerror = () => { coverChecks.set(url, false); presence() }
+    img.src = url
+  }
+  return coverChecks.get(url) ? url : null
+}
+
 function presence() {
   if (!s.discord_enabled) return
   const n = nowInfo()
@@ -1130,7 +1143,7 @@ function presence() {
   if (!artist && cut > 0) [artist, song] = [song.slice(0, cut), song.slice(cut + 3)]
   const line = (x) => (x.length < 2 ? `${x}  ` : x).slice(0, 128)
   const a = { type: 2, name: (artist || 'weebwa.re').slice(0, 128), details: line(song), state: line(artist ? `by ${artist}` : 'weebwa.re'), instance: false }
-  a.assets = { large_image: n.cover || 'icon', large_text: line(song) }
+  a.assets = { large_image: liveCover(n.cover) || 'icon', large_text: line(song) }
   if (!n.paused && n.duration) {
     const start = Date.now() - (n.pos / n.rate) * 1000
     a.timestamps = { start: Math.round(start), end: Math.round(start + (n.duration / n.rate) * 1000) }
