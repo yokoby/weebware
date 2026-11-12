@@ -1,0 +1,22 @@
+{
+  "name": "weebware",
+  "productName": "weebware",
+  "version": "3.1.1",
+  "description": "local music player",
+  "author": "yokoby",
+  "private": true,
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-packager . weebware --platform=win32 --arch=x64 --out=build --overwrite --asar --icon=assets/icon.ico --app-copyright=yokoby --win32metadata.CompanyName=yokoby --win32metadata.ProductName=weebware --win32metadata.FileDescription=weebware --ignore=^/build --ignore=^/README\\.md --ignore=^/docs --ignore=^/\\.git",
+    "pack:mac": "electron-packager . weebware --platform=darwin --out=build --overwrite --asar --icon=assets/icon.icns --app-bundle-id=re.weebwa.player --app-category-type=public.app-category.music --app-copyright=yokoby --ignore=^/build --ignore=^/README\\.md --ignore=^/docs --ignore=^/\\.git"
+  },
+  "dependencies": {
+    "music-metadata": "^12.2.3"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^44.9.0"
+  }
+}

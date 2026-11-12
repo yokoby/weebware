@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' file:; connect-src 'self' file:; font-src 'self'">
+<title>weebwa.re</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="frame">
+    <div class="window-outer">
+      <div class="window-inner">
+        <div class="window-content">
+
+          <div class="hairline"></div>
+
+          <div class="titlebar-row drag">
+            <div class="logo"><img class="logo-img" src="../assets/logo.png" alt=""><span>&lsaquo;3 weebwa.re</span></div>
+            <div class="tab-row no-drag">
+              <span class="tab active" data-tab="home">home</span>
+              <span class="tab" data-tab="download">download</span>
+              <span class="tab" data-tab="settings">settings</span>
+            </div>
+            <div class="win-controls no-drag">
+              <span class="win-btn" id="btn-min">[-]</span>
+              <span class="win-btn" id="btn-max">[ ]</span>
+              <span class="win-btn" id="btn-close">[+]</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="body">
+            <div class="sidebar">
+              <canvas class="sidebar-visualizer hidden" id="sidebar-visualizer"></canvas>
+              <div class="sidebar-content">
+                <div class="version-block">
+                  <div class="version">v3.1.1</div>
+                  <div class="credit">by yokoby</div>
+                </div>
+
+                <div class="divider" style="margin: 10px 12px; width: auto;"></div>
+
+                <div class="playlists-header">
+                  <span class="muted-label">playlists</span>
+                  <span class="pl-actions">
+                    <span class="btn-bracket" id="pl-del">[-]</span>
+                    <span class="btn-bracket" id="pl-add">[+]</span>
+                  </span>
+                </div>
+                <div class="playlist-list" id="playlist-list"></div>
+
+                <div class="count-lbl" id="count-lbl">0 tracks , 0mb</div>
+              </div>
+            </div>
+
+            <div class="v-divider"></div>
+
+            <div class="main">
+              <div class="view" id="view-home">
+                <div class="view-header">
+                  <span class="view-title" id="view-title">library</span>
+                  <span class="view-actions">
+                    <span class="btn-bracket" id="sort-key">[title]</span>
+                    <span class="btn-bracket" id="sort-dir">[a-z]</span>
+                    <span class="btn-bracket hidden" id="remove-from-playlist">[remove from playlist]</span>
+                    <span class="btn-bracket" id="delete-tracks">[delete]</span>
+                    <span class="btn-bracket" id="open-folder">[open folder]</span>
+                    <span class="btn-bracket" id="refresh">[refresh]</span>
+                  </span>
+                </div>
+                <div class="pl-banner hidden" id="pl-banner">
+                  <span id="pl-banner-text"></span>
+                  <span class="btn-bracket" id="pl-exit">[library]</span>
+                </div>
+                <input class="search-box" id="search-home" placeholder="search . . .">
+                <div class="track-list" id="track-list"></div>
+              </div>
+
+              <div class="view" id="view-download">
+                <div class="view-header">
+                  <span class="view-title">download</span>
+                </div>
+                <div class="dl-search-row">
+                  <input class="search-box" id="search-dl" placeholder="search . . . or paste a track / playlist / profile url">
+                  <span class="btn-bracket" id="dl-go">[go]</span>
+                </div>
+                <div class="dl-status" id="dl-status">search for a song to download. go+ tracks are marked and skipped, they'd only be 30 second previews</div>
+                <div class="track-list" id="dl-results"></div>
+                <div class="dl-actions">
+                  <span class="muted-label">into</span>
+                  <select class="preset-select dl-target" id="dl-target"></select>
+                  <span class="btn-bracket" id="dl-download">[download selected]</span>
+                </div>
+              </div>
+
+              <div class="view" id="view-settings">
+                <div class="view-header">
+                  <span class="view-title">settings</span>
+                </div>
+                <div class="muted-label" style="margin: 4px 0 6px;">music folder</div>
+                <div class="folder-row">
+                  <span class="folder-path" id="music-dir-path"></span>
+                  <span class="btn-bracket" id="choose-music-folder">[choose folder]</span>
+                </div>
+                <span class="btn-bracket" id="tidy-toggle" style="margin-top: 8px; display: inline-block;">[tidy file names: on]</span>
+                <div class="setting-note">fixes junk in song file names as they show up: stray _, (official audio), a copy's (1), .MP3. renames are logged in renames.json</div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin: 4px 0 6px;">accent color</div>
+                <div class="preset-row">
+                  <select class="preset-select" id="preset-select"></select>
+                  <span class="btn-bracket" id="preset-remove">[-]</span>
+                  <span class="btn-bracket" id="preset-add">[+]</span>
+                </div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">custom color</div>
+                <div class="color-field-row">
+                  <input type="color" class="color-swatch" id="accent-picker" value="#fe9aec">
+                  <input class="hex-input" id="hex-input" value="#fe9aec">
+                </div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">gradient colors</div>
+                <div class="gradient-colors-list" id="gradient-colors-list"></div>
+                <div class="gradient-colors-actions">
+                  <span class="btn-bracket" id="gradient-color-remove">[-]</span>
+                  <span class="btn-bracket" id="gradient-color-add">[+]</span>
+                </div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">background</div>
+                <div class="color-field-row">
+                  <input type="color" class="color-swatch" id="bg-picker" value="#000000">
+                  <input class="hex-input" id="bg-hex-input" value="#000000">
+                </div>
+                <span class="btn-bracket" id="auto-contrast-toggle" style="margin-top: 8px; display: inline-block;">[auto contrast: on]</span>
+                <div class="color-field-row hidden" id="text-color-row" style="margin-top: 8px;">
+                  <input type="color" class="color-swatch" id="text-picker" value="#b7b7b7">
+                  <input class="hex-input" id="text-hex-input" value="#b7b7b7">
+                </div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">dividers</div>
+                <span class="btn-bracket" id="divider-shade-toggle">[divider: lighter]</span>
+                <div class="eq-row" style="margin-top: 10px;">
+                  <span class="eq-label">contrast</span>
+                  <div class="bar small" id="divider-intensity-bar"><div class="bar-fill" id="divider-intensity-fill"></div></div>
+                </div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">progress bar</div>
+                <span class="btn-bracket" id="waveform-toggle">[waveform: off]</span>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">audio effects</div>
+                <div class="eq-row">
+                  <span class="eq-label">bass boost</span>
+                  <div class="bar small" id="bass-bar"><div class="bar-fill" id="bass-fill"></div></div>
+                </div>
+                <div class="eq-row">
+                  <span class="eq-label">reverb</span>
+                  <div class="bar small" id="reverb-bar"><div class="bar-fill" id="reverb-fill"></div></div>
+                </div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">glow &amp; gradient</div>
+                <div class="eq-row">
+                  <span class="eq-label">glow radius</span>
+                  <div class="bar small" id="glow-bar"><div class="bar-fill" id="glow-fill"></div></div>
+                </div>
+                <div class="eq-row">
+                  <span class="eq-label">anim. speed</span>
+                  <div class="bar small" id="gradient-speed-bar"><div class="bar-fill" id="gradient-speed-fill"></div></div>
+                </div>
+                <span class="btn-bracket" id="gradient-toggle">[gradient: on]</span>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">sidebar visualizer</div>
+                <span class="btn-bracket" id="visualizer-toggle">[visualizer: off]</span>
+                <span class="btn-bracket" id="vis-fade-toggle">[fade: off]</span>
+                <span class="btn-bracket" id="vis-gradient-sync-toggle">[gradient sync: off]</span>
+                <div class="eq-row" style="margin-top: 10px;">
+                  <span class="eq-label">opacity</span>
+                  <div class="bar small" id="vis-opacity-bar"><div class="bar-fill" id="vis-opacity-fill"></div></div>
+                </div>
+                <div class="eq-row">
+                  <span class="eq-label">bar thickness</span>
+                  <div class="bar small" id="vis-thickness-bar"><div class="bar-fill" id="vis-thickness-fill"></div></div>
+                </div>
+                <div class="eq-row">
+                  <span class="eq-label">bar height</span>
+                  <div class="bar small" id="vis-height-bar"><div class="bar-fill" id="vis-height-fill"></div></div>
+                </div>
+                <div class="eq-row">
+                  <span class="eq-label">height limit</span>
+                  <div class="bar small" id="vis-height-limit-bar"><div class="bar-fill" id="vis-height-limit-fill"></div></div>
+                </div>
+                <div class="eq-row">
+                  <span class="eq-label">bar count</span>
+                  <div class="bar small" id="vis-count-bar"><div class="bar-fill" id="vis-count-fill"></div></div>
+                </div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">discord</div>
+                <span class="btn-bracket" id="discord-toggle">[discord rpc: off]</span>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="stats-block">
+                  <div id="stat-memory">memory: ... mb</div>
+                  <div id="stat-played">tracks played: ...</div>
+                  <div id="stat-listened">listening time: ...</div>
+                </div>
+                <div class="divider" style="margin: 10px 0;"></div>
+                <div class="muted-label" style="margin-bottom: 6px;">credits</div>
+                <div class="stats-block">yokoby n pep</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="bottom-bar">
+            <div class="now-playing">
+              <div class="track-title" id="np-title">no track loaded</div>
+              <div class="track-sub-row">
+                <span class="track-sub" id="np-sub">drop files into Music &rsaquo; weebware</span>
+                <span class="btn-bracket" id="add-to-playlist">[+ playlist]</span>
+              </div>
+            </div>
+
+            <div class="transport">
+              <div class="transport-controls">
+                <span class="btn-bracket" id="btn-shuffle">[shuffle]</span>
+                <span class="btn-bracket" id="btn-prev">[prev]</span>
+                <span class="btn-bracket accent" id="btn-play">[play]</span>
+                <span class="btn-bracket" id="btn-next">[next]</span>
+                <span class="btn-bracket" id="btn-repeat">[repeat]</span>
+              </div>
+              <div class="progress-row">
+                <span class="time" id="time-cur">0:00</span>
+                <div class="bar" id="progress-bar">
+                  <div class="bar-fill" id="progress-fill"></div>
+                  <canvas class="bar-waveform" id="progress-waveform"></canvas>
+                </div>
+                <span class="time" id="time-tot">0:00</span>
+              </div>
+            </div>
+
+            <div class="sliders">
+              <div class="rate-row">
+                <span class="btn-bracket" id="rate-minus">[-]</span>
+                <div class="bar small" id="rate-bar">
+                  <div class="bar-fill" id="rate-fill"></div>
+                  <div class="bar-tick"></div>
+                </div>
+                <span class="btn-bracket" id="rate-plus">[+]</span>
+              </div>
+              <div class="bar small" id="vol-bar"><div class="bar-fill" id="vol-fill"></div></div>
+            </div>
+          </div>
+
+          <div class="modal-overlay hidden" id="modal-overlay">
+            <div class="modal-box">
+              <div class="modal-title" id="modal-title"></div>
+              <input class="modal-input hidden" id="modal-input">
+              <div class="modal-list hidden" id="modal-list"></div>
+              <div class="modal-actions" id="modal-actions-default">
+                <span class="btn-bracket" id="modal-cancel">[cancel]</span>
+                <span class="btn-bracket accent" id="modal-ok">[ok]</span>
+              </div>
+              <div class="modal-actions hidden" id="modal-actions-confirm">
+                <span class="btn-bracket" id="modal-no">[no]</span>
+                <span class="btn-bracket accent" id="modal-yes">[yes]</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="toast-container" id="toast-container"></div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
