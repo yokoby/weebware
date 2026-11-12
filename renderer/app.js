@@ -1130,7 +1130,7 @@ function presence() {
   if (!artist && cut > 0) [artist, song] = [song.slice(0, cut), song.slice(cut + 3)]
   const line = (x) => (x.length < 2 ? `${x}  ` : x).slice(0, 128)
   const a = { type: 2, name: (artist || 'weebwa.re').slice(0, 128), details: line(song), state: line(artist ? `by ${artist}` : 'weebwa.re'), instance: false }
-  if (n.cover) a.assets = { large_image: n.cover, large_text: line(song) }
+  a.assets = { large_image: n.cover || 'icon', large_text: line(song) }
   if (!n.paused && n.duration) {
     const start = Date.now() - (n.pos / n.rate) * 1000
     a.timestamps = { start: Math.round(start), end: Math.round(start + (n.duration / n.rate) * 1000) }
