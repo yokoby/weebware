@@ -31,5 +31,5 @@ songs go in `Music/weebware` , settings live in `%APPDATA%/weebware-electron`
 torus isn't included , it's a paid font. drop `Torus-Regular.otf` and `Torus-Bold.otf` in `assets/fonts` if you have it , otherwise it uses your system font
 
 ## Authors
-* yokoby , weebware
+* yokoby
 * pep
